@@ -190,7 +190,7 @@ async function loadTransactions() {
   $("transactions").innerHTML = data
     .map(
       (item) => `
-        <div class="transaction-row">
+        <div class="transaction-row" data-id="${item.id}" data-type="${item.type}" data-amount="${item.amount}" data-category="${escapeHtml(item.category)}" data-date="${item.transaction_date}" data-note="${escapeHtml(item.note || "")}">
           <div>
             <strong>
               ${categoryEmoji(item.category)} ${escapeHtml(item.category)}
@@ -218,7 +218,25 @@ async function loadTransactions() {
 }
 $("transactions").addEventListener("click", async (event) => {
   const button = event.target.closest(".delete-btn");
-  if (!button) return;
+
+  if (!button) {
+    const row = event.target.closest(".transaction-row");
+    if (!row) return;
+
+    editingId = row.dataset.id;
+    $("amount").value = row.dataset.amount;
+    $("category").value = row.dataset.category;
+    $("date").value = row.dataset.date;
+    $("note").value = row.dataset.note || "";
+
+    const typeInput = document.querySelector(
+      `input[name="type"][value="${row.dataset.type}"]`
+    );
+    if (typeInput) typeInput.checked = true;
+
+    $("transactionForm").scrollIntoView({ behavior: "smooth" });
+    return;
+  }
 
   const ok = confirm("確定要刪除這筆紀錄嗎？");
   if (!ok) return;
