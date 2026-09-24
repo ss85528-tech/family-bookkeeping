@@ -203,12 +203,32 @@ async function loadTransactions() {
           <div class="transaction-amount">
             ${item.type === "income" ? "+" : "−"}
             ${money(item.amount)}
+            <button class="delete-btn" data-id="${item.id}">刪除</button>
           </div>
         </div>
       `
     )
     .join("");
 }
+$("transactions").addEventListener("click", async (event) => {
+  const button = event.target.closest(".delete-btn");
+  if (!button) return;
+
+  const ok = confirm("確定要刪除這筆紀錄嗎？");
+  if (!ok) return;
+
+  const { error } = await db
+    .from("transactions")
+    .delete()
+    .eq("id", button.dataset.id);
+
+  if (error) {
+    alert("刪除失敗：" + error.message);
+    return;
+  }
+
+  await loadTransactions();
+});
 function categoryEmoji(category) {
   const icons = {
     "餐飲": "🍜",
