@@ -177,3 +177,6 @@ button:active {
   min-height: 52px;
   padding: 10px 14px;
 }
+.hidden {
+  display: none !important;
+}
