@@ -187,7 +187,7 @@ async function loadTransactions() {
         <div class="transaction-row">
           <div>
             <strong>
-              ${escapeHtml(item.category)}
+              ${categoryEmoji(item.category)} ${escapeHtml(item.category)}
             </strong>
 
             <p>
@@ -209,7 +209,26 @@ async function loadTransactions() {
     )
     .join("");
 }
+function categoryEmoji(category) {
+  const icons = {
+    "餐飲": "🍜",
+    "交通": "🚗",
+    "購物": "🛍️",
+    "家庭": "🏠",
+    "育兒": "👶",
+    "房貸": "🏡",
+    "水電": "💡",
+    "保險": "🛡️",
+    "旅遊": "✈️",
+    "娛樂": "🎮",
+    "薪資": "💰",
+    "獎金": "🎁",
+    "投資": "📈",
+    "其他": "📦"
+  };
 
+  return icons[category] || "📌";
+}
 function escapeHtml(value) {
   return String(value || "").replace(
     /[&<>"']/g,
