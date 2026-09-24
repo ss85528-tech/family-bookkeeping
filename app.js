@@ -223,7 +223,7 @@ async function loadTransactions() {
 
   if (!deleteButton) {
     editingId = row.dataset.id;
-
+    $("transactionForm").querySelector('button[type="submit"]').textContent = "更新紀錄";
     $("amount").value = row.dataset.amount;
     $("category").value = row.dataset.category;
     $("date").value = row.dataset.date;
