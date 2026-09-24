@@ -89,11 +89,22 @@ $("transactionForm").addEventListener(
     } = await db.auth.getUser();
 
     if (!user) return;
+const { data: member, error: memberError } = await db
+  .from("household_members")
+  .select("household_id")
+  .eq("user_id", user.id)
+  .single();
 
+if (memberError || !member) {
+  $("transactionMessage").textContent =
+    memberError?.message || "找不到家庭資料";
+  return;
+}
     const formData = new FormData(event.target);
 
     const transaction = {
       user_id: user.id,
+      household_id: member.household_id,
       type: formData.get("type"),
       amount: Number($("amount").value),
       category: $("category").value.trim(),
