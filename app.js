@@ -19,7 +19,7 @@ const money = (value) =>
   "NT$ " + Number(value || 0).toLocaleString("zh-TW");
 
 $("date").value = new Date().toISOString().slice(0, 10);
-
+let editingId = null;
 async function render() {
   if (!db) {
     $("loginMessage").textContent =
@@ -115,9 +115,15 @@ if (memberError || !member) {
     $("transactionMessage").textContent =
       "儲存中…";
 
-    const { error } = await db
-      .from("transactions")
-      .insert(transaction);
+    let query = db.from("transactions");
+
+if (editingId) {
+  query = query.update(transaction).eq("id", editingId);
+} else {
+  query = query.insert(transaction);
+}
+
+const { error } = await query;
 
     if (error) {
       $("transactionMessage").textContent =
@@ -130,7 +136,7 @@ if (memberError || !member) {
 
     $("amount").value = "";
     $("note").value = "";
-
+    editingId = null;
     await loadTransactions();
   }
 );
