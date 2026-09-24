@@ -1,0 +1,222 @@
+const config = window.APP_CONFIG || {};
+
+const configured =
+  config.SUPABASE_URL &&
+  config.SUPABASE_ANON_KEY &&
+  !config.SUPABASE_URL.startsWith("YOUR_") &&
+  !config.SUPABASE_ANON_KEY.startsWith("YOUR_");
+
+const db = configured
+  ? supabase.createClient(
+      config.SUPABASE_URL,
+      config.SUPABASE_ANON_KEY
+    )
+  : null;
+
+const $ = (id) => document.getElementById(id);
+
+const money = (value) =>
+  "NT$ " + Number(value || 0).toLocaleString("zh-TW");
+
+$("date").value = new Date().toISOString().slice(0, 10);
+
+async function render() {
+  if (!db) {
+    $("loginMessage").textContent =
+      "尚未設定 Supabase，稍後我們會完成連線。";
+    return;
+  }
+
+  const {
+    data: { session },
+  } = await db.auth.getSession();
+
+  $("loginSection").classList.toggle("hidden", !!session);
+  $("dashboard").classList.toggle("hidden", !session);
+  $("logoutBtn").classList.toggle("hidden", !session);
+
+  if (session) {
+    await loadTransactions();
+  }
+}
+
+$("loginForm").addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  if (!db) {
+    $("loginMessage").textContent =
+      "尚未設定 Supabase。";
+    return;
+  }
+
+  $("loginMessage").textContent = "登入中…";
+
+  const { error } =
+    await db.auth.signInWithPassword({
+      email: $("email").value,
+      password: $("password").value,
+    });
+
+  if (error) {
+    $("loginMessage").textContent = error.message;
+    return;
+  }
+
+  $("loginMessage").textContent = "";
+  await render();
+});
+
+$("logoutBtn").addEventListener("click", async () => {
+  if (!db) return;
+
+  await db.auth.signOut();
+  await render();
+});
+
+$("refreshBtn").addEventListener("click", async () => {
+  await loadTransactions();
+});
+
+$("transactionForm").addEventListener(
+  "submit",
+  async (event) => {
+    event.preventDefault();
+
+    if (!db) return;
+
+    const {
+      data: { user },
+    } = await db.auth.getUser();
+
+    if (!user) return;
+
+    const formData = new FormData(event.target);
+
+    const transaction = {
+      user_id: user.id,
+      type: formData.get("type"),
+      amount: Number($("amount").value),
+      category: $("category").value.trim(),
+      transaction_date: $("date").value,
+      note: $("note").value.trim() || null,
+    };
+
+    $("transactionMessage").textContent =
+      "儲存中…";
+
+    const { error } = await db
+      .from("transactions")
+      .insert(transaction);
+
+    if (error) {
+      $("transactionMessage").textContent =
+        error.message;
+      return;
+    }
+
+    $("transactionMessage").textContent =
+      "已儲存";
+
+    $("amount").value = "";
+    $("note").value = "";
+
+    await loadTransactions();
+  }
+);
+
+async function loadTransactions() {
+  if (!db) return;
+
+  const now = new Date();
+
+  const firstDay =
+    `${now.getFullYear()}-` +
+    `${String(now.getMonth() + 1).padStart(2, "0")}-01`;
+
+  const { data, error } = await db
+    .from("transactions")
+    .select("*")
+    .gte("transaction_date", firstDay)
+    .order("transaction_date", {
+      ascending: false,
+    })
+    .limit(100);
+
+  if (error) {
+    $("transactions").innerHTML =
+      `<p class="muted">${escapeHtml(error.message)}</p>`;
+    return;
+  }
+
+  let income = 0;
+  let expense = 0;
+
+  (data || []).forEach((item) => {
+    if (item.type === "income") {
+      income += Number(item.amount);
+    } else {
+      expense += Number(item.amount);
+    }
+  });
+
+  $("income").textContent = money(income);
+  $("expense").textContent = money(expense);
+  $("balance").textContent =
+    money(income - expense);
+
+  if (!data || data.length === 0) {
+    $("transactions").innerHTML =
+      '<p class="muted">尚無資料</p>';
+    return;
+  }
+
+  $("transactions").innerHTML = data
+    .map(
+      (item) => `
+        <div class="transaction-row">
+          <div>
+            <strong>
+              ${escapeHtml(item.category)}
+            </strong>
+
+            <p>
+              ${item.transaction_date}
+              ${
+                item.note
+                  ? " · " + escapeHtml(item.note)
+                  : ""
+              }
+            </p>
+          </div>
+
+          <div class="transaction-amount">
+            ${item.type === "income" ? "+" : "−"}
+            ${money(item.amount)}
+          </div>
+        </div>
+      `
+    )
+    .join("");
+}
+
+function escapeHtml(value) {
+  return String(value || "").replace(
+    /[&<>"']/g,
+    (character) =>
+      ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;",
+      })[character]
+  );
+}
+
+if (db) {
+  db.auth.onAuthStateChange(() => {
+    render();
+  });
+}
+
+render();
