@@ -172,3 +172,8 @@ button:active {
     margin-bottom: 0;
   }
 }
+#category {
+  font-size: 20px;
+  min-height: 52px;
+  padding: 10px 14px;
+}
