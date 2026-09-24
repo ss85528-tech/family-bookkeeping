@@ -215,15 +215,15 @@ async function loadTransactions() {
       `
     )
     .join("");
-}
-$("transactions").addEventListener("click", async (event) => {
-  const button = event.target.closest(".delete-btn");
+}$("transactions").addEventListener("click", async (event) => {
+  const row = event.target.closest(".transaction-row");
+  if (!row) return;
 
-  if (!button) {
-    const row = event.target.closest(".transaction-row");
-    if (!row) return;
+  const deleteButton = event.target.closest(".delete-btn");
 
+  if (!deleteButton) {
     editingId = row.dataset.id;
+
     $("amount").value = row.dataset.amount;
     $("category").value = row.dataset.category;
     $("date").value = row.dataset.date;
@@ -232,9 +232,14 @@ $("transactions").addEventListener("click", async (event) => {
     const typeInput = document.querySelector(
       `input[name="type"][value="${row.dataset.type}"]`
     );
+
     if (typeInput) typeInput.checked = true;
 
-    $("transactionForm").scrollIntoView({ behavior: "smooth" });
+    $("transactionForm").scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+
     return;
   }
 
@@ -244,7 +249,7 @@ $("transactions").addEventListener("click", async (event) => {
   const { error } = await db
     .from("transactions")
     .delete()
-    .eq("id", button.dataset.id);
+    .eq("id", row.dataset.id);
 
   if (error) {
     alert("刪除失敗：" + error.message);
