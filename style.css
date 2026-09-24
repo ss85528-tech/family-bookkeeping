@@ -180,3 +180,8 @@ button:active {
 .hidden {
   display: none !important;
 }
+.edit-btn {
+  background: #e9e9ed;
+  color: #1d1d1f;
+  margin-right: 8px;
+}
