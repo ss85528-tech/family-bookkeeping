@@ -137,6 +137,8 @@ const { error } = await query;
     $("amount").value = "";
     $("note").value = "";
     editingId = null;
+    $("saveBtn").textContent = "儲存紀錄";
+$("cancelEditBtn").classList.add("hidden");
     $("transactionForm").querySelector('button[type="submit"]').textContent = "儲存紀錄";
     await loadTransactions();
   }
