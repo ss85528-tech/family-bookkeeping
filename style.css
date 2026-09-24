@@ -1,0 +1,174 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #f5f6f8;
+  color: #1d1d1f;
+  font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC",
+    "Helvetica Neue", Arial, sans-serif;
+}
+
+.container {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 28px 16px 60px;
+}
+
+.header,
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.header h1 {
+  margin: 3px 0 22px;
+  font-size: 30px;
+}
+
+.subtitle {
+  color: #777;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+}
+
+.card {
+  background: white;
+  border: 1px solid #e5e5ea;
+  border-radius: 18px;
+  padding: 18px;
+  margin-bottom: 14px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.04);
+}
+
+h2 {
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+.muted,
+.message {
+  color: #777;
+  font-size: 13px;
+}
+
+form {
+  display: grid;
+  gap: 13px;
+}
+
+label {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+input {
+  width: 100%;
+  margin-top: 6px;
+  padding: 13px;
+  border: 1px solid #d7d7dc;
+  border-radius: 12px;
+  background: white;
+  font-size: 16px;
+}
+
+button {
+  border: 0;
+  border-radius: 12px;
+  padding: 13px 16px;
+  background: #1d1d1f;
+  color: white;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+button:active {
+  opacity: 0.75;
+}
+
+.secondary {
+  padding: 9px 12px;
+  background: #ececef;
+  color: #333;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.summary .card {
+  padding: 14px;
+}
+
+.summary span {
+  display: block;
+  color: #777;
+  font-size: 12px;
+}
+
+.summary strong {
+  display: block;
+  margin-top: 7px;
+  font-size: 17px;
+}
+
+.type-selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.type-selector label {
+  padding: 11px;
+  border-radius: 12px;
+  background: #f0f0f3;
+  text-align: center;
+}
+
+.type-selector input {
+  width: auto;
+  margin: 0 5px 0 0;
+}
+
+.transaction-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 13px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.transaction-row:last-child {
+  border-bottom: 0;
+}
+
+.transaction-row p {
+  margin: 3px 0 0;
+  color: #777;
+  font-size: 12px;
+}
+
+.transaction-amount {
+  white-space: nowrap;
+  font-weight: 700;
+}
+
+@media (max-width: 520px) {
+  .summary {
+    grid-template-columns: 1fr;
+  }
+
+  .summary .card {
+    margin-bottom: 0;
+  }
+}
