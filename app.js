@@ -212,6 +212,7 @@ async function loadTransactions() {
           <div class="transaction-amount">
             ${item.type === "income" ? "+" : "−"}
             ${money(item.amount)}
+            <button class="edit-btn" type="button">編輯</button>
             <button class="delete-btn" data-id="${item.id}">刪除</button>
           </div>
         </div>
@@ -223,8 +224,8 @@ async function loadTransactions() {
   if (!row) return;
 
   const deleteButton = event.target.closest(".delete-btn");
-
-  if (!deleteButton) {
+   const editButton = event.target.closest(".edit-btn");
+  if (editButton) {
     editingId = row.dataset.id;
     $("transactionForm").querySelector('button[type="submit"]').textContent = "更新紀錄";
     $("cancelEditBtn").classList.remove("hidden");
