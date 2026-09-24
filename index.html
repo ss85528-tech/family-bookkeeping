@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f5f6f8">
+  <title>家庭記帳</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <main class="container">
+
+    <header class="header">
+      <div>
+        <div class="subtitle">FAMILY BOOKKEEPING</div>
+        <h1>家庭記帳</h1>
+      </div>
+      <button id="logoutBtn" class="secondary hidden">登出</button>
+    </header>
+
+    <section id="loginSection" class="card">
+      <h2>登入</h2>
+      <p class="muted">登入後即可同步家庭帳目。</p>
+
+      <form id="loginForm">
+        <label>
+          Email
+          <input id="email" type="email" required>
+        </label>
+
+        <label>
+          密碼
+          <input id="password" type="password" required>
+        </label>
+
+        <button type="submit">登入</button>
+      </form>
+
+      <p id="loginMessage" class="message"></p>
+    </section>
+
+    <section id="dashboard" class="hidden">
+
+      <div class="summary">
+        <div class="card">
+          <span>本月收入</span>
+          <strong id="income">NT$ 0</strong>
+        </div>
+
+        <div class="card">
+          <span>本月支出</span>
+          <strong id="expense">NT$ 0</strong>
+        </div>
+
+        <div class="card">
+          <span>本月結餘</span>
+          <strong id="balance">NT$ 0</strong>
+        </div>
+      </div>
+
+      <section class="card">
+        <h2>新增紀錄</h2>
+
+        <form id="transactionForm">
+
+          <div class="type-selector">
+            <label>
+              <input type="radio" name="type" value="expense" checked>
+              支出
+            </label>
+
+            <label>
+              <input type="radio" name="type" value="income">
+              收入
+            </label>
+          </div>
+
+          <label>
+            金額
+            <input id="amount" type="number" min="0" required>
+          </label>
+
+          <label>
+            分類
+            <input id="category" placeholder="例如：餐飲、交通、薪資" required>
+          </label>
+
+          <label>
+            日期
+            <input id="date" type="date" required>
+          </label>
+
+          <label>
+            備註
+            <input id="note" placeholder="選填">
+          </label>
+
+          <button type="submit">儲存紀錄</button>
+        </form>
+
+        <p id="transactionMessage" class="message"></p>
+      </section>
+
+      <section class="card">
+        <div class="section-header">
+          <h2>最近紀錄</h2>
+          <button id="refreshBtn" class="secondary">重新整理</button>
+        </div>
+
+        <div id="transactions">
+          <p class="muted">尚無資料</p>
+        </div>
+      </section>
+
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+
+</body>
+</html>
