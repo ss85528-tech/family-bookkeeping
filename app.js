@@ -225,6 +225,7 @@ async function loadTransactions() {
   if (!deleteButton) {
     editingId = row.dataset.id;
     $("transactionForm").querySelector('button[type="submit"]').textContent = "更新紀錄";
+    $("cancelEditBtn").classList.remove("hidden");
     $("amount").value = row.dataset.amount;
     $("category").value = row.dataset.category;
     $("date").value = row.dataset.date;
@@ -292,7 +293,17 @@ function escapeHtml(value) {
       })[character]
   );
 }
+$("cancelEditBtn").addEventListener("click", () => {
+  editingId = null;
 
+  $("transactionForm").reset();
+  $("date").value = new Date().toISOString().slice(0, 10);
+
+  $("saveBtn").textContent = "儲存紀錄";
+  $("cancelEditBtn").classList.add("hidden");
+
+  $("transactionMessage").textContent = "";
+});
 if (db) {
   db.auth.onAuthStateChange(() => {
     render();
