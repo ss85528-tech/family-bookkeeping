@@ -156,9 +156,7 @@ const firstDay = `${month}-01`;
 
 const [year, monthNumber] = month.split("-").map(Number);
 const nextMonth = new Date(year, monthNumber, 1);
-const lastDay =
-  `${nextMonth.getFullYear()}-` +
-  `${String(nextMonth.getMonth() + 1).padStart(2, "0")}-01`;
+const lastDay = nextMonth.toISOString().slice(0, 10);
   const { data, error } = await db
     .from("transactions")
     .select("*")
