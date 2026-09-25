@@ -146,17 +146,24 @@ $("cancelEditBtn").classList.add("hidden");
 
 async function loadTransactions() {
   if (!db) return;
+const month =
+  $("monthFilter").value ||
+  new Date().toISOString().slice(0, 7);
 
-  const now = new Date();
+$("monthFilter").value = month;
 
-  const firstDay =
-    `${now.getFullYear()}-` +
-    `${String(now.getMonth() + 1).padStart(2, "0")}-01`;
+const firstDay = `${month}-01`;
 
+const [year, monthNumber] = month.split("-").map(Number);
+const nextMonth = new Date(year, monthNumber, 1);
+const lastDay =
+  `${nextMonth.getFullYear()}-` +
+  `${String(nextMonth.getMonth() + 1).padStart(2, "0")}-01`;
   const { data, error } = await db
     .from("transactions")
     .select("*")
     .gte("transaction_date", firstDay)
+    .lt("transaction_date", lastDay)
     .order("transaction_date", {
       ascending: false,
     })
@@ -312,5 +319,7 @@ if (db) {
     render();
   });
 }
-
+$("monthFilter").addEventListener("change", async () => {
+  await loadTransactions();
+});
 render();
