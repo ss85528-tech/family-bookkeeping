@@ -320,7 +320,7 @@ if (db) {
   });
 }
 $("monthFilter").addEventListener("change", async () => {
-  alert("月份切換成功");
+  
   await loadTransactions();
 });
 render();
