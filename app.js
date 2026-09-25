@@ -51,12 +51,12 @@ $("loginForm").addEventListener("submit", async (event) => {
 
   $("loginMessage").textContent = "登入中…";
 
-  const { error } =
+  const { data, error } =
     await db.auth.signInWithPassword({
       email: $("email").value,
       password: $("password").value,
     });
-
+alert("登入結果：" + (error ? error.message : data?.session ? "成功取得 session" : "沒有 session"));
   if (error) {
     $("loginMessage").textContent = error.message;
     return;
