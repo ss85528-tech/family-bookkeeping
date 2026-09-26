@@ -36,7 +36,7 @@ async function render() {
   $("logoutBtn").classList.toggle("hidden", !session);
 
   if (session) {
-    await loadTransactions();
+    //await loadTransactions();
   }
 }
 
