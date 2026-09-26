@@ -224,7 +224,9 @@ const lastDay = nextMonth.toISOString().slice(0, 10);
       `
     )
     .join("");
-}$("transactions").addEventListener("click", async (event) => {
+}
+
+$("transactions").addEventListener(
   const row = event.target.closest(".transaction-row");
   if (!row) return;
 
