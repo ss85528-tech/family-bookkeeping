@@ -1,3 +1,4 @@
+alert("app.js 已載入");
 const config = window.APP_CONFIG || {};
 
 const configured =
