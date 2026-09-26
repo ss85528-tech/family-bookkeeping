@@ -42,7 +42,7 @@ async function render() {
 
 $("loginForm").addEventListener("submit", async (event) => {
   event.preventDefault();
-
+alert("登入程式有執行");
   if (!db) {
     $("loginMessage").textContent =
       "尚未設定 Supabase。";
