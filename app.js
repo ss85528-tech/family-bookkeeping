@@ -51,12 +51,12 @@ $("loginForm").addEventListener("submit", async (event) => {
 
   $("loginMessage").textContent = "登入中…";
 
-  const { data, error } =
+  const { error } =
     await db.auth.signInWithPassword({
       email: $("email").value,
       password: $("password").value,
     });
-alert("登入結果：" + (error ? error.message : data?.session ? "成功取得 session" : "沒有 session"));
+
   if (error) {
     $("loginMessage").textContent = error.message;
     return;
@@ -146,22 +146,17 @@ $("cancelEditBtn").classList.add("hidden");
 
 async function loadTransactions() {
   if (!db) return;
-const month =
-  $("monthFilter").value ||
-  new Date().toISOString().slice(0, 7);
 
-$("monthFilter").value = month;
+  const now = new Date();
 
-const firstDay = `${month}-01`;
+  const firstDay =
+    `${now.getFullYear()}-` +
+    `${String(now.getMonth() + 1).padStart(2, "0")}-01`;
 
-const [year, monthNumber] = month.split("-").map(Number);
-const nextMonth = new Date(year, monthNumber, 1);
-const lastDay = nextMonth.toISOString().slice(0, 10);
   const { data, error } = await db
     .from("transactions")
     .select("*")
     .gte("transaction_date", firstDay)
-    .lt("transaction_date", lastDay)
     .order("transaction_date", {
       ascending: false,
     })
@@ -224,9 +219,7 @@ const lastDay = nextMonth.toISOString().slice(0, 10);
       `
     )
     .join("");
-}
-
-$("transactions").addEventListener("click", async (event) => {
+}$("transactions").addEventListener("click", async (event) => {
   const row = event.target.closest(".transaction-row");
   if (!row) return;
 
@@ -319,8 +312,5 @@ if (db) {
     render();
   });
 }
-$("monthFilter").addEventListener("change", async () => {
-  
-  await loadTransactions();
-});
+
 render();
