@@ -36,13 +36,13 @@ async function render() {
   $("logoutBtn").classList.toggle("hidden", !session);
 
   if (session) {
-    //await loadTransactions();
+    await loadTransactions();
   }
 }
 
 $("loginForm").addEventListener("submit", async (event) => {
   event.preventDefault();
-alert("登入程式有執行");
+
   if (!db) {
     $("loginMessage").textContent =
       "尚未設定 Supabase。";
